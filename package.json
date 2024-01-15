@@ -4,18 +4,30 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "prettier --write . && node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "prettier --write . && nodemon src/index.js",
+    "prod": "prettier --write . && pm2 start src/index.js",
+    "stop": "pm2 stop server",
+    "format": "prettier --write ."
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "http": "0.0.1-security",
-    "nodemon": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.4",
+    "pm2": "^5.3.0",
     "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "prettier": "^3.1.1"
   }
 }

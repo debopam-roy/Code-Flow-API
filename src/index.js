@@ -1,9 +1,11 @@
-const cookieParser = require("cookie-parser");
-const dbConnection = require("./db/database");
-const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const http = require("http");
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const dbConnection = require("./db/database");
 const app = express();
+const server = http.createServer(app);
 
 app.use(
   cors({
@@ -16,56 +18,22 @@ app.use(cookieParser());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-const privateRouter = require("./server");
+const privateRouter = require("./server")(server);
 
 const dbConn = async () => {
   await dbConnection();
 };
 
 dbConn();
+
 app
   .route("/")
-  .get(() => "⚙️ Welcome to CodeFlow Homepage. ⚙️ ")
-  .post(() => "⚙️ Welcome to CodeFlow Homepage. ⚙️ ");
+  .get((req, res) => res.send("⚙️ Welcome to CodeFlow Homepage. ⚙️ "))
+  .post((req, res) => res.send("⚙️ Welcome to CodeFlow Homepage. ⚙️ "));
+
 app.use("/api", privateRouter);
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is listening on port: ${process.env.PORT}.`);
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => {
+  console.log(`Server is listening on port: ${PORT}.`);
 });
-
-// const http = require("http")
-// const { Server } = require("socket.io")
-// const ACTION = require("./utils/Actions")
-// const server = http.createServer(app)
-// const io = new Server(server, {
-//   cors: {
-//     origin: "*",
-//   },
-// })
-
-// const userSocketMap = {}
-// const getAllConnectedClients = (roomId) => {
-//   return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
-//     (socketId) => {
-//       return {
-//         socketId,
-//         username: userSocketMap[socketId],
-//       }
-//     }
-//   )
-// }
-
-// io.on("connection", (socket) => {
-//   socket.on(ACTION.JOIN, ({ roomId, username }) => {
-//     userSocketMap[socket.id] = username
-//     socket.join(roomId)
-//     const clients = getAllConnectedClients(roomId)
-//     clients.forEach(({ socketId }) => {
-//       io.to(socketId).emit(ACTION.JOINED, {
-//         clients,
-//         username,
-//         socketId: socket.id,
-//       })
-//     })
-//   })
-// })

@@ -2,7 +2,7 @@ const ApiError = require("../utils/ApiError");
 const ApiResponse = require("../utils/ApiResponse");
 
 const getUserName = (req, res) => {
-  const user = req.cookies.user;
+  const user = req.cookies?.user;
 
   if (!user) {
     throw new ApiError(400, "Error occurred during initializing the editor.");
